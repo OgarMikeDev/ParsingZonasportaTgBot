@@ -1,0 +1,1 @@
+{"update_id":62543978,"message":{"message_id":85,"from":{"id":1957288286,"first_name":"Михаил","is_bot":false,"username":"ogarJavaDev","language_code":"ru"},"date":1769421326,"chat":{"id":1957288286,"type":"private","first_name":"Михаил","username":"ogarJavaDev"},"text":"/start","entities":[{"type":"bot_command","offset":0,"length":6}]}}
