@@ -102,7 +102,7 @@ public class Bot extends TelegramLongPollingBot {
                 //System.out.println("\uD83E\uDD28" + nameShare + " - " + priceShare + " руб.\uD83E\uDD28");
                 builderLinkAllHolidays.append("\uD83E\uDD28" + nameShare + " - " + priceShare + " руб.\uD83E\uDD28\n");
             }
-            builderLinkAllHolidays = builderLinkAllHolidays;
+            builderShares = builderLinkAllHolidays;
             FileWriter fileWriterShares = new FileWriter("src/main/resources/shares.txt");
             fileWriterShares.write(builderLinkAllHolidays.toString());
             fileWriterShares.close();
