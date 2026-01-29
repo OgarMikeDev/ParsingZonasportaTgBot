@@ -35,13 +35,13 @@ public class Bot extends TelegramLongPollingBot {
     public void forWorkWithText(Update update) {
         if (update.hasMessage()) {
             String text = update.getMessage().getText();
-            System.out.println(text);
             long userId = update.getMessage().getFrom().getId();
 
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(userId);
 
             getListAllHolidays();
+            System.out.println("Текст: " + text);
             if (text.equals("/hello")) {
                 sendMessage.setText("Вас приветствует информационный тг-бот");
             } else if (text.equals("/time")) {
@@ -59,7 +59,7 @@ public class Bot extends TelegramLongPollingBot {
             } else if (text.equals("/input_share_for_sell")) {
                 sendMessage.setText("Введите название акции и цену для её продажи(Сбербанк - 500):");
                 isCommandSellShare = true;
-            } else if (builderShares.toString().contains(text) && isCommandSellShare) {
+            } else if (isCommandSellShare) {
                 String[] arrayNameAndPriceForSellShare = text.split(" - ");
                 for (String currentPart : arrayNameAndPriceForSellShare) {
                     System.out.println("😁" + currentPart + "😁");
