@@ -12,10 +12,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import java.io.File;
 import java.io.FileWriter;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class Bot extends TelegramLongPollingBot {
     private String urlIndexCalendar = "https://smart-lab.ru/q/shares/";
+    private boolean isCommandSellShare = false;
+    private StringBuilder builderShares = new StringBuilder();
+
     @Override
     public void onUpdateReceived(Update update) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -33,17 +35,18 @@ public class Bot extends TelegramLongPollingBot {
     public void forWorkWithText(Update update) {
         if (update.hasMessage()) {
             String text = update.getMessage().getText();
+            System.out.println(text);
             long userId = update.getMessage().getFrom().getId();
 
             SendMessage sendMessage = new SendMessage();
             sendMessage.setChatId(userId);
 
+            getListAllHolidays();
             if (text.equals("/hello")) {
                 sendMessage.setText("Вас приветствует информационный тг-бот");
             } else if (text.equals("/time")) {
                 sendMessage.setText(String.valueOf(LocalDateTime.now()));
             } else if (text.equals("/get_list_all_holidays")) {
-                getListAllHolidays();
                 SendDocument sendDocument = new SendDocument();
                 sendDocument.setChatId(userId);
                 sendDocument.setDocument(new InputFile(new File("src/main/resources/shares.txt")));
@@ -52,6 +55,14 @@ public class Bot extends TelegramLongPollingBot {
                     execute(sendDocument);
                 } catch (Exception ex) {
                     ex.getMessage();
+                }
+            } else if (text.equals("/input_share_for_sell")) {
+                sendMessage.setText("Введите название акции и цену для её продажи(Сбербанк - 500):");
+                isCommandSellShare = true;
+            } else if (builderShares.toString().contains(text) && isCommandSellShare) {
+                String[] arrayNameAndPriceForSellShare = text.split(" - ");
+                for (String currentPart : arrayNameAndPriceForSellShare) {
+                    System.out.println("😁" + currentPart + "😁");
                 }
             }
 
@@ -91,6 +102,7 @@ public class Bot extends TelegramLongPollingBot {
                 //System.out.println("\uD83E\uDD28" + nameShare + " - " + priceShare + " руб.\uD83E\uDD28");
                 builderLinkAllHolidays.append("\uD83E\uDD28" + nameShare + " - " + priceShare + " руб.\uD83E\uDD28\n");
             }
+            builderLinkAllHolidays = builderLinkAllHolidays;
             FileWriter fileWriterShares = new FileWriter("src/main/resources/shares.txt");
             fileWriterShares.write(builderLinkAllHolidays.toString());
             fileWriterShares.close();
