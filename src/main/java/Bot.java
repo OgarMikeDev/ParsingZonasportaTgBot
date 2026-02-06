@@ -62,13 +62,28 @@ public class Bot extends TelegramLongPollingBot {
             //TODO Разделели блоки кода с одинаковой структурой(товары)
             Elements elementsItems = document.select("div[style*=width:35%;text-align:right;float:left;]");
             StringBuilder builderItems = new StringBuilder();
+            String nameItem = "";
+            String priceItem = "";
             for (Element elementItem : elementsItems) {
+                //TODO Задание: Вырезать название товара и добавить в builderItems
+                String textItem = elementItem.toString();
+                String templateForName = "/product/";
+                int leftIndexForName = textItem.indexOf(templateForName);
+                if (leftIndexForName >= 0) {
+                    leftIndexForName += templateForName.length();
+                    int rightIndexForName = textItem.indexOf("'", leftIndexForName);
+                    if (rightIndexForName >= 0) {
+                        nameItem = textItem.substring(leftIndexForName, rightIndexForName);
+                        builderItems.append(nameItem);
+                    }
+                }
+
                 //TODO Разделили все строки span, включая ту, кот-я содержит цену товара
                 Elements elementsSpans = elementItem.select("span");
                 for (Element elementSpan : elementsSpans) {
                     if (elementSpan.toString().contains("₽")) {
-                        String price = elementSpan.text();
-                        builderItems.append("🤷‍♂️" + price + "🤷‍♂️\n");
+                        priceItem = elementSpan.text();
+                        builderItems.append(priceItem  + "️\n");
                     }
                 }
             }
