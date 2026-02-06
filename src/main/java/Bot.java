@@ -4,13 +4,17 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Bot extends TelegramLongPollingBot {
+    private Map<String, String> mapItems = new HashMap<>();
     @Override
     public void onUpdateReceived(Update update) {
         try {
@@ -51,6 +55,25 @@ public class Bot extends TelegramLongPollingBot {
                 } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                 }
+            } else if (mapItems.containsKey(text)) {
+                String priceItem = mapItems.get(text);
+                /*
+                TODO
+                 Задание:
+                 С помощью  SendMessage
+                 в ответ на название товара
+                 отправлять пользователю его цену
+                 */
+                SendMessage sendMessage = new SendMessage();
+                sendMessage.setChatId(idUser);
+                sendMessage.setText(priceItem);
+
+                //TODO try и catch нужен, чтобы в случае внешней ошибки, программа не остановилась
+                try {
+                    execute(sendMessage);
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
         }
     }
@@ -83,9 +106,11 @@ public class Bot extends TelegramLongPollingBot {
                 for (Element elementSpan : elementsSpans) {
                     if (elementSpan.toString().contains("₽")) {
                         priceItem = elementSpan.text();
-                        builderItems.append(priceItem  + "️\n");
+                        builderItems.append(" " + priceItem  + "️\n");
                     }
                 }
+
+                mapItems.put(nameItem, priceItem);
             }
 
             FileWriter fileWriter = new FileWriter("src/main/resources/nastolnyj-tennis.html");
